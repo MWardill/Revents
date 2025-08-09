@@ -1,3 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@layer components {
+  .headernav a,
+  .headernav button {
+    @apply cursor-pointer;
+  }
+}
