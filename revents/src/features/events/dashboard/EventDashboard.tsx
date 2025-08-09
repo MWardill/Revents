@@ -1,3 +1,4 @@
+import EventForm from "../form/eventForm";
 import EventCard from "./EventCard";
 
 export default function EventDashboard() {
@@ -11,7 +12,11 @@ export default function EventDashboard() {
         ))}
       </div>
 
-      <div className="w-2/5">Right Content</div>
+      <div className="w-2/5">
+        <div className="sticky top-20">
+          <EventForm />
+        </div>
+      </div>
 
     </div>
   )
