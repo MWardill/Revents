@@ -43,8 +43,9 @@ export default function EventForm({ setFormOpen, createEvent, selectedEvent, upd
 
   
 
-  return (
+  return (    
     <div className="card card-border bg-base-100 w-full shadow-xl">
+      <div className="card-body">
         <h3 className="text-2xl font-semibold text-center text-primary">{selectedEvent ? 'Edit Event' : 'Create Event'}</h3>
         <form action={onSubmit} className="flex flex-col gap-3 width-full">
             <input 
@@ -94,6 +95,7 @@ export default function EventForm({ setFormOpen, createEvent, selectedEvent, upd
                 <button type="submit" className="btn btn-primary btn-sm">Submit</button>
             </div>
         </form>
+        </div>
     </div>
   )
 }

@@ -73,7 +73,7 @@ export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, f
       </div>
 
       <div className="w-2/5">
-        <div className="sticky top-20 overflow-hidden">
+        <div className="sticky top-20">
           <AnimatePresence>
             {formOpen && (
               <motion.div
