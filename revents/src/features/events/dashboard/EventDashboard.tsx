@@ -14,9 +14,19 @@ type Props = {
 export default function EventDashboard({ formOpen, setFormOpen }: Props) {
 
   const [appEvents, setAppEvents] = useState<AppEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<AppEvent | null>(null);
+
+  const handleSelectEvent = (event: AppEvent) => {
+    setSelectedEvent(event);
+    setFormOpen(true);
+  }
+
+  const handleCreateEvent = (event: AppEvent) => {
+    setAppEvents(prevState => [...prevState, event]);
+  }
 
   useEffect(() => {
-    //Call setApEvents with "events from sampleData
+    //Call setApEvents with "events" from sampleData
     setAppEvents(events);
 
     //Cleanup function to reset events when component unmounts
@@ -38,23 +48,19 @@ export default function EventDashboard({ formOpen, setFormOpen }: Props) {
           >
             <div className="flex flex-col gap-4">
               {appEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-
-              /* Just load two for now */
-              {appEvents.slice(0, 2).map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-
+                <EventCard 
+                selectEvent={handleSelectEvent}
+                key={event.id} 
+                event={event} />
+              ))}              
             </div>
-
           </motion.div>
         </AnimatePresence>
 
       </div>
 
       <div className="w-2/5">
-        <div className="sticky top-20">
+        <div className="sticky top-20 overflow-hidden">
           <AnimatePresence>
             {formOpen && (
               <motion.div
@@ -62,7 +68,11 @@ export default function EventDashboard({ formOpen, setFormOpen }: Props) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 200 }}
                 transition={{ ease: "easeInOut", duration: 0.5 }}>
-                <EventForm setFormOpen={setFormOpen} />
+                <EventForm 
+                selectedEvent={selectedEvent}
+                setFormOpen={setFormOpen} 
+                createEvent={handleCreateEvent}
+                />
               </motion.div>
             )}
           </AnimatePresence>
