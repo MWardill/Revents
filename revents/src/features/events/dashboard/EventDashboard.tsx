@@ -9,20 +9,31 @@ import { AnimatePresence, motion } from "motion/react";
 type Props = {
   formOpen: boolean;
   setFormOpen: (open: boolean) => void;
+  selectedEvent?: AppEvent | null;
+  formToggle: (event: AppEvent | null) => void;
 }
 
-export default function EventDashboard({ formOpen, setFormOpen }: Props) {
+export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, formToggle }: Props) {
 
   const [appEvents, setAppEvents] = useState<AppEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<AppEvent | null>(null);
 
-  const handleSelectEvent = (event: AppEvent) => {
-    setSelectedEvent(event);
-    setFormOpen(true);
+  const handleDeleteEvent = (eventId: string) => {
+    setAppEvents(prevState => prevState.filter(event => event.id !== eventId));
   }
 
   const handleCreateEvent = (event: AppEvent) => {
     setAppEvents(prevState => [...prevState, event]);
+  }
+
+  const handleUpdateEvent = (updatedEvent: AppEvent) => {
+    setAppEvents(prevState => {
+      return prevState.map(e => {
+        if (e.id === updatedEvent.id) {
+          return { ...e, ...updatedEvent };
+        }
+        return e;
+      });
+    });
   }
 
   useEffect(() => {
@@ -44,14 +55,16 @@ export default function EventDashboard({ formOpen, setFormOpen }: Props) {
             initial={{ opacity: 0, x: -200 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -200 }}
-            transition={{ ease: "easeInOut", duration: 0.7 }}
+            transition={{ ease: "easeInOut", duration: 0.5 }}
           >
             <div className="flex flex-col gap-4">
               {appEvents.map((event) => (
                 <EventCard 
-                selectEvent={handleSelectEvent}
+                selectEvent={formToggle}
                 key={event.id} 
-                event={event} />
+                event={event} 
+                deleteEvent={handleDeleteEvent}
+                />
               ))}              
             </div>
           </motion.div>
@@ -68,11 +81,13 @@ export default function EventDashboard({ formOpen, setFormOpen }: Props) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 200 }}
                 transition={{ ease: "easeInOut", duration: 0.5 }}>
-                <EventForm 
-                selectedEvent={selectedEvent}
-                setFormOpen={setFormOpen} 
-                createEvent={handleCreateEvent}
-                />
+                  <EventForm 
+                  key={selectedEvent?.id || "new-event"}
+                  selectedEvent={selectedEvent}
+                  setFormOpen={setFormOpen} 
+                  createEvent={handleCreateEvent}
+                  updateEvent={handleUpdateEvent}                
+                  />
               </motion.div>
             )}
           </AnimatePresence>

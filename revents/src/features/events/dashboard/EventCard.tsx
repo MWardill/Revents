@@ -4,11 +4,11 @@ import EventAttendees from "./EventAttendees";
 type Props = {
     event: AppEvent;
     selectEvent: (event: AppEvent) => void;
+    deleteEvent: (eventId: string) => void;
 }
 
-export default function EventCard({ event, selectEvent }: Props) {
+export default function EventCard({ event, selectEvent, deleteEvent }: Props) {
     const host = event.attendees.find(attendee => attendee.isHost);
-
 
     return (
         <div className="card card-border bg-base-100 w-full shadow-xl">
@@ -31,10 +31,13 @@ export default function EventCard({ event, selectEvent }: Props) {
                 </div>
                 
                 <div className="card-actions flex justify-between">
-                    <div className="flex">
+                    <div>   
                         {event.description}
                     </div>
-                    <button onClick={() => selectEvent(event)} className="btn btn-sm btn-primary">View</button>
+                    <div className="flex gap-3">
+                        <button onClick={() => deleteEvent(event.id)} className="btn btn-sm btn-error">Delete</button>
+                        <button onClick={() => selectEvent(event)} className="btn btn-sm btn-primary">View</button>                        
+                    </div>
                 </div>
             </div>
         </div>
