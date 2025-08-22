@@ -1,51 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { events } from "../../../lib/data/sampleData";
-import type { AppEvent } from "../../../lib/types";
 import EventForm from "../form/EventForm";
 import EventCard from "./EventCard";
 import { AnimatePresence, motion } from "motion/react";
 import Counter from "../../counter/Counter";
+import { useAppDispatch, useAppSelector } from "../../../lib/stores/store";
+import { setEvents } from "../eventSlice";
 
+export default function EventDashboard() {
 
-type Props = {
-  formOpen: boolean;
-  setFormOpen: (open: boolean) => void;
-  selectedEvent?: AppEvent | null;
-  formToggle: (event: AppEvent | null) => void;
-}
+  const dispatch = useAppDispatch();
 
-export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, formToggle }: Props) {
-
-  const [appEvents, setAppEvents] = useState<AppEvent[]>([]);
-
-  const handleDeleteEvent = (eventId: string) => {
-    setAppEvents(prevState => prevState.filter(event => event.id !== eventId));
-  }
-
-  const handleCreateEvent = (event: AppEvent) => {
-    setAppEvents(prevState => [...prevState, event]);
-  }
-
-  const handleUpdateEvent = (updatedEvent: AppEvent) => {
-    setAppEvents(prevState => {
-      return prevState.map(e => {
-        if (e.id === updatedEvent.id) {
-          return { ...e, ...updatedEvent };
-        }
-        return e;
-      });
-    });
-  }
+  const {events: appEvents, selectedEvent, formOpen} = useAppSelector(state => state.event);
 
   useEffect(() => {
-    //Call setApEvents with "events" from sampleData
-    setAppEvents(events);
-
-    //Cleanup function to reset events when component unmounts
-    return () => {
-      setAppEvents([]);
-    }
-  }, []);
+    //Call setAppEvents with "events" from sampleData
+    dispatch(setEvents(events));
+  }, [dispatch]);
 
   return (
     <div className="flex flex-row w-full gap-6">
@@ -60,11 +31,9 @@ export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, f
           >
             <div className="flex flex-col gap-4">
               {appEvents.map((event) => (
-                <EventCard 
-                selectEvent={formToggle}
+                <EventCard                 
                 key={event.id} 
-                event={event} 
-                deleteEvent={handleDeleteEvent}
+                event={event}                 
                 />
               ))}              
             </div>
@@ -84,11 +53,7 @@ export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, f
                 exit={{ opacity: 0, x: 200 }}
                 transition={{ ease: "easeInOut", duration: 0.5 }}>
                   <EventForm 
-                  key={selectedEvent?.id || "new-event"}
-                  selectedEvent={selectedEvent}
-                  setFormOpen={setFormOpen} 
-                  createEvent={handleCreateEvent}
-                  updateEvent={handleUpdateEvent}                
+                    key={selectedEvent?.id || "new-event"}                  
                   />
               </motion.div>
             ) : (
