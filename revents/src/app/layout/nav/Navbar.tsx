@@ -1,10 +1,12 @@
 import { NavLink } from "react-router";
 import { toggleForm } from "../../../features/events/eventSlice";
 import { useAppDispatch } from "../../../lib/stores/store";
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
 
     const dispatch = useAppDispatch();
+    const loggedIn = true;
 
     return (
         <header className="headernav p-2 w-full sticky top-0 z-50 bg-gradient-to-r from-primary to-black">
@@ -17,8 +19,12 @@ export default function Navbar() {
                     <NavLink to='/createEvent' onClick={() => dispatch(toggleForm(null))}>Create</NavLink>
                 </nav>
                 <div className="flex align-middle ml-auto gap-3">
-                    <button className="btn btn-sm">Login</button>
-                    <button className="btn btn-sm">Register</button>
+                    {loggedIn ? (<UserMenu />) : (
+                        <>
+                            <button className="btn btn-sm">Login</button>
+                            <button className="btn btn-sm">Register</button>
+                        </>
+                    )}
                 </div>
             </div>
         </header>
