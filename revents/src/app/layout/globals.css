@@ -8,6 +8,9 @@
   }
 }
 
+a.active {
+  @apply text-cyan-400;
+}
 
 
 @plugin "daisyui/theme" {
