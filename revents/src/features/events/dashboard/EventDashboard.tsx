@@ -4,6 +4,7 @@ import type { AppEvent } from "../../../lib/types";
 import EventForm from "../form/EventForm";
 import EventCard from "./EventCard";
 import { AnimatePresence, motion } from "motion/react";
+import Counter from "../../counter/Counter";
 
 
 type Props = {
@@ -74,9 +75,10 @@ export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, f
 
       <div className="w-2/5">
         <div className="sticky top-20">
-          <AnimatePresence>
-            {formOpen && (
+          <AnimatePresence mode="wait">
+            {formOpen ? (
               <motion.div
+                key={selectedEvent?.id || "new-event"}
                 initial={{ opacity: 0, x: 200 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 200 }}
@@ -88,6 +90,15 @@ export default function EventDashboard({ formOpen, setFormOpen, selectedEvent, f
                   createEvent={handleCreateEvent}
                   updateEvent={handleUpdateEvent}                
                   />
+              </motion.div>
+            ) : (
+               <motion.div
+                key="counter"
+                initial={{ opacity: 0, x: 200 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 200 }}
+                transition={{ ease: "easeInOut", duration: 0.5 }}>
+                  <Counter></Counter>
               </motion.div>
             )}
           </AnimatePresence>

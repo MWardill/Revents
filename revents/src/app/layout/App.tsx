@@ -9,11 +9,8 @@ function App() {
   
   const handleFormToggle = (event: AppEvent | null) => {
      if(formOpen) {
-      setFormOpen(false);
-      setTimeout(() => {
-        setSelectedEvent(event);
-        setFormOpen(true);
-      }, 600);
+      // If form is already open, just update the selected event
+      setSelectedEvent(event);
     } else {
       setSelectedEvent(event);
       setFormOpen(true);
