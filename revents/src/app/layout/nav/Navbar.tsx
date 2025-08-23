@@ -14,7 +14,7 @@ export default function Navbar() {
     }
 
     return (
-        <header className="headernav p-2 w-full sticky top-0 z-50 bg-gradient-to-r from-primary to-blue-950">
+        <header className="headernav p-2 w-full sticky top-0 z-50 bg-gradient-to-r from-primary to-info">
             <div className="flex align-middle items-center px-10 mx-auto gap-6">
                 <div className="h-12 text-white flex items-center gap-3 border-r-white border-r-2 pr-6">
                     <NavLink to='/' className="text-2xl font-semibold text-white uppercase">Re-vents</NavLink>
