@@ -1,13 +1,10 @@
 import { users } from "../../../lib/data/sampleData";
-import { useAppDispatch, useAppSelector } from "../../../lib/stores/store";
+import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import type { AppEvent } from "../../../lib/types";
-import { closeForm, createEvent, updateEvent } from "../eventSlice";
 
 export default function EventForm() {
+  const { selectedEvent, actions } = useAppBase();
 
-  const selectedEvent = useAppSelector(state => state.event.selectedEvent);
-
-  const dispatch = useAppDispatch();
   const initialValues = selectedEvent ?? {
     title: '',
     category: '',
@@ -20,13 +17,13 @@ export default function EventForm() {
   const onSubmit = (formData: FormData) => {
     const data = Object.fromEntries(formData.entries()) as unknown as AppEvent;
     
-    dispatch(closeForm());
+    actions.closeForm();
     
     if(selectedEvent) {
-      dispatch(updateEvent({...selectedEvent, ...data}));
+      actions.updateEvent({...selectedEvent, ...data});
       return;
     }
-    dispatch(createEvent({
+    actions.createEvent({
         ...data,
         id: crypto.randomUUID(),
         hostUid: users[0].uid,
@@ -36,7 +33,10 @@ export default function EventForm() {
           photoURL: users[0].photoURL,
           isHost: true
         }],
-    }));    
+        attendeeIds: [users[0].uid],
+        latitude: 0,
+        longitude: 0
+    });    
   }
 
   return (
@@ -87,7 +87,7 @@ export default function EventForm() {
                 placeholder="Venue" />
 
             <div className="flex justify-end w-full gap-3">
-                <button onClick={() => dispatch(closeForm())} type="button" className="btn btn-neutral btn-sm">Cancel</button>
+                <button onClick={() => actions.closeForm()} type="button" className="btn btn-neutral btn-sm">Cancel</button>
                 <button type="submit" className="btn btn-primary btn-sm">Submit</button>
             </div>
         </form>

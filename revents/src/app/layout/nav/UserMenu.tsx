@@ -1,16 +1,26 @@
-import { CalendarDateRangeIcon, CalendarIcon, PowerIcon, UserIcon } from "@heroicons/react/24/outline";
-import { users } from "../../../lib/data/sampleData";
+import { CalendarIcon, PowerIcon, UserIcon } from "@heroicons/react/24/outline";
+import { useAppBase } from "../../../lib/hooks/useBaseComponent";
+import { signOut } from "../../../features/account/AccountSlice";
+import { useNavigate } from "react-router";
 
 export default function UserMenu() {
+    const { user, dispatch } = useAppBase();
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {   
+        dispatch(signOut());
+        navigate('/');
+    }
+
     return (
         <div className="dropdown dropdown-bottom dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-accent m-1">
                 <div className="avatar">
                     <div className="w-11 rounded-full">
-                        <img src={users[0].photoURL} alt="User Avatar" />
+                        <img src={user?.photoURL || '/user.png'} alt="User Avatar" />
                     </div>
                 </div>
-                <span>Mat</span>
+                <span>{user?.displayName}</span>
             </div>
             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                 <li>
@@ -27,7 +37,7 @@ export default function UserMenu() {
                 </li>
                 <div className="divider my-0"></div>
                 <li>
-                    <div className="flex items-center gap-3">
+                    <div onClick={handleSignOut}  className="flex items-center gap-3">
                         <PowerIcon className="size-6 text-error" />
                         Sign Out
                     </div>
