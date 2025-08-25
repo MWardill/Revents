@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { users } from "../../../lib/data/sampleData";
 import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import type { AppEvent } from "../../../lib/types";
@@ -96,7 +96,7 @@ export default function EventForm() {
                 placeholder="Venue" />
 
             <div className="flex justify-end w-full gap-3">
-                <Link to=".." className="btn btn-neutral btn-sm">Cancel</Link>
+                <button type="button" onClick={() => navigate(-1)} className="btn btn-neutral btn-sm">Cancel</button>
                 <button type="submit" className="btn btn-primary btn-sm">Submit</button>
             </div>
         </form>
