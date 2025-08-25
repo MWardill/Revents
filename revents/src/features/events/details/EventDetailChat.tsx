@@ -1,4 +1,11 @@
-export default function EventDetailChat() {
+import type { AppEvent } from "../../../lib/types";
+
+ type Props = {
+      appEvent: AppEvent;
+  }
+
+export default function EventDetailChat({ appEvent }: Props) {
+            
     return (
         <div className="card bg-white">
             <div className="card-title justify-center bg-gradient-to-r from-primary to-info text-white p-1 rounded-t-lg">

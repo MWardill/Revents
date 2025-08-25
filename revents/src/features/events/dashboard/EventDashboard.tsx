@@ -1,18 +1,9 @@
-import { useEffect } from "react";
-import { events } from "../../../lib/data/sampleData";
 import EventCard from "./EventCard";
 import Counter from "../../counter/Counter";
 import { useAppBase } from "../../../lib/hooks/useBaseComponent";
-import { setEvents } from "../eventSlice";
 
 export default function EventDashboard() {
-  const { dispatch, events: appEvents } = useAppBase();
-
-  useEffect(() => {
-    //Call setAppEvents with "events" from sampleData
-    if(appEvents.length === 0)
-      dispatch(setEvents(events));
-  }, [dispatch, appEvents]);
+  const { events: appEvents } = useAppBase();
 
   return (
     <div className="flex flex-row w-full gap-6">

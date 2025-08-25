@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router";
-import { toggleForm } from "../../../features/events/eventSlice";
 import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import UserMenu from "./UserMenu";
 import { signIn } from "../../../features/account/AccountSlice";
@@ -21,7 +20,7 @@ export default function Navbar() {
                 </div>
                 <nav className="flex gap-3 my-2 font-semibold uppercase text-lg text-white">
                     <NavLink to='/events' end>Events</NavLink>
-                    <NavLink to='/createEvent' onClick={() => dispatch(toggleForm(null))}>Create</NavLink>
+                    <NavLink to='/createEvent'>Create</NavLink>
                 </nav>
                 <div className="flex align-middle ml-auto gap-3">
                     {user ? (<UserMenu />) : (

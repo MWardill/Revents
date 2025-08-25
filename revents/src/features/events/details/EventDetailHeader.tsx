@@ -1,15 +1,24 @@
-export default function EventDetailHeader() {
+import type { AppEvent } from "../../../lib/types";
+
+ type Props = {
+      appEvent: AppEvent;
+  }
+
+export default function EventDetailHeader({ appEvent }: Props) {
+        
+    const host = appEvent?.attendees.find(attendee => attendee.isHost);
+    
     return (
         <div className="card bg-base-100 relative">
             <figure className="h-64 brightness-50 rounded-lg">
-                <img src={`/categoryImages/drinks.jpg`} alt="Event image" className="object-cover object-left w-full h-full" />
+                <img src={`/categoryImages/${appEvent.category}.jpg`} alt="Event image" className="object-cover object-left w-full h-full" />
             </figure>
             <div className="card-body text-white justify-end absolute inset-0 flex flex-col">
                 <div className="flex justify-between">
                     <div>
-                        <h2 className="card-title text-4xl">Event Title</h2>
-                        <p>Event Date</p>
-                        <p>Hosted by Bob</p>
+                        <h2 className="card-title text-4xl">{appEvent.title}</h2>
+                        <p>{appEvent.date}</p>
+                        <p>Hosted by {host?.displayName} </p>
                     </div>
                 </div>
 

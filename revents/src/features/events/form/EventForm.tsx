@@ -87,7 +87,7 @@ export default function EventForm() {
                 placeholder="Venue" />
 
             <div className="flex justify-end w-full gap-3">
-                <button onClick={() => actions.closeForm()} type="button" className="btn btn-neutral btn-sm">Cancel</button>
+                <button type="reset" className="btn btn-neutral btn-sm">Cancel</button>
                 <button type="submit" className="btn btn-primary btn-sm">Submit</button>
             </div>
         </form>
