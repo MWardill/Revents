@@ -11,10 +11,11 @@ import { useAppSelector } from "../../../lib/stores/store";
 
 export default function EventDetails() {
   const { dispatch }  = useAppBase();
-  const { id } = useParams<{id: string}>();
-  const event = useAppSelector(state => state.event.selectedEvent);
+  const { id } = useParams<{id: string}>();  
+  const event = useAppSelector(state => state.event.events.find(e => e.id === id));
 
   useEffect(() => {
+    //Don't think the below is strictly neccesary as I've tried not to use selectedEvent
     if(id) {
       dispatch(selectEvent(id));
     }

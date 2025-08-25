@@ -1,10 +1,17 @@
+import { Link, useNavigate, useParams } from "react-router";
 import { users } from "../../../lib/data/sampleData";
 import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import type { AppEvent } from "../../../lib/types";
+import { createEvent, updateEvent } from "../eventSlice";
+import { useAppSelector } from "../../../lib/stores/store";
 
 export default function EventForm() {
-  const { selectedEvent, actions } = useAppBase();
+  const { dispatch } = useAppBase();
+  const navigate = useNavigate();
 
+  const { id } = useParams<{id: string}>();  
+  const selectedEvent = useAppSelector(state => state.event.events.find(e => e.id === id));
+  
   const initialValues = selectedEvent ?? {
     title: '',
     category: '',
@@ -16,16 +23,17 @@ export default function EventForm() {
   
   const onSubmit = (formData: FormData) => {
     const data = Object.fromEntries(formData.entries()) as unknown as AppEvent;
-    
-    actions.closeForm();
-    
+            
     if(selectedEvent) {
-      actions.updateEvent({...selectedEvent, ...data});
+      dispatch(updateEvent({...selectedEvent, ...data}));
+      navigate(`/events/${selectedEvent.id}`);
       return;
     }
-    actions.createEvent({
+    
+    const newEventId = crypto.randomUUID();
+    dispatch(createEvent({
         ...data,
-        id: crypto.randomUUID(),
+        id: newEventId,
         hostUid: users[0].uid,
         attendees: [{
           id: users[0].uid,
@@ -36,7 +44,8 @@ export default function EventForm() {
         attendeeIds: [users[0].uid],
         latitude: 0,
         longitude: 0
-    });    
+    }));    
+    navigate(`/events/${newEventId}`);
   }
 
   return (
@@ -87,7 +96,7 @@ export default function EventForm() {
                 placeholder="Venue" />
 
             <div className="flex justify-end w-full gap-3">
-                <button type="reset" className="btn btn-neutral btn-sm">Cancel</button>
+                <Link to=".." className="btn btn-neutral btn-sm">Cancel</Link>
                 <button type="submit" className="btn btn-primary btn-sm">Submit</button>
             </div>
         </form>
