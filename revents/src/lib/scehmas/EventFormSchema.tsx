@@ -6,7 +6,12 @@ export const eventFormSchema = z.object({
     title: requiredString('Title'),
     category: requiredString('Category'),
     description: requiredString('Description'),
-    date: requiredString('Date'),
+    date: requiredString('Date').refine((val) => {
+        const selectedDate = new Date(val);
+        return selectedDate > new Date();
+     }, {
+        message: 'Date must be in the future',
+    }),
     city: requiredString('City'),
     venue: requiredString('Venue'),
 });

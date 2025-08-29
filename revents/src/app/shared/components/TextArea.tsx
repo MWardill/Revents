@@ -2,32 +2,29 @@ import clsx from 'clsx'
 import { useController, type FieldValues, type UseControllerProps } from 'react-hook-form';
 
 type Props<T extends FieldValues> = {      
-    type?: string;
+    rows?: number;
     label: string;
-    min?: Date;    
 } & UseControllerProps<T>
 
 
-export default function TextInput<T extends FieldValues>(props: Props<T>) {
+export default function TextArea<T extends FieldValues>(props: Props<T>) {
 
     const { field, fieldState } = useController({...props});
-    const minDate = props.min?.toISOString().slice(0,16);
 
     return (
     <label className="floating-label">
         <span>
             {props.label}
         </span>
-        <input 
+        <textarea 
               {...field}
+              rows={props.rows}
               value={field.value ?? ''}
-              type={props.type}
-              min={minDate}
-              className={clsx('input w-full', 
+              className={clsx('textarea w-full',
                 {'input-error': !!fieldState.error},  //!! first ! is a boolean check if it exists then a check if it is false
                 {'input-success': !fieldState.error && fieldState.isDirty }
             )}
-              placeholder={props.label} />
+              placeholder={props.label} ></textarea>
         {
             fieldState.error && 
             (<div className="mt-1 text-xs font-semibold block text-error">

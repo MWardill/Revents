@@ -8,6 +8,10 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import TextInput from "../../../app/shared/components/TextInput";
 import { eventFormSchema, type EventFormSchema } from "../../../lib/scehmas/EventFormSchema";
 import {zodResolver} from '@hookform/resolvers/zod';
+import TextArea from "../../../app/shared/components/TextArea";
+import { categoryOptions } from "./CategoryOptions";
+import SelectInput from "../../../app/shared/components/SelectInput";
+import PlaceInput from "../../../app/shared/components/PlaceInput";
 
 export default function EventForm() {
   const { dispatch } = useAppBase();
@@ -25,7 +29,7 @@ export default function EventForm() {
     venue: ''
   };
   
-  const { register, control, handleSubmit, formState: {isValid} } = useForm<EventFormSchema>({
+  const { control, handleSubmit, formState: {isValid} } = useForm<EventFormSchema>({
     mode: 'onTouched',
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues
@@ -72,36 +76,34 @@ export default function EventForm() {
               name="title"
               label="Title"              
             />              
-            <TextInput
+            <SelectInput
               control={control}
               name="category"
               label="Category"
+              options={categoryOptions}
             />
 
-            <textarea 
-                {...register("description")}
-                className="textarea w-full" 
-                placeholder="Description" 
-                rows={4}/>
-
-            <input 
-              {...register("date")}
-              type="datetime-local"
-              className="input w-full"
-              placeholder="Date" />
+            <TextArea 
+                control={control}
+                name="description"
+                label="Description"
+                rows={3}
+            />                
 
             <TextInput
               control={control}
-              name="city"
-              label="City"
+              name="date"
+              label="Date"
+              type="datetime-local"
+              min={new Date()}
             />
 
-            <TextInput
+            <PlaceInput
               control={control}
               name="venue"
               label="Venue"
             />    
-                  
+
             <div className="flex justify-end w-full gap-3">
                 <button                   
                   type="button" 

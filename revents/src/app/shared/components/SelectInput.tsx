@@ -4,30 +4,34 @@ import { useController, type FieldValues, type UseControllerProps } from 'react-
 type Props<T extends FieldValues> = {      
     type?: string;
     label: string;
-    min?: Date;    
+    options: {key: string; label: string}[];
 } & UseControllerProps<T>
 
 
-export default function TextInput<T extends FieldValues>(props: Props<T>) {
+export default function SelectInput<T extends FieldValues>(props: Props<T>) {
 
     const { field, fieldState } = useController({...props});
-    const minDate = props.min?.toISOString().slice(0,16);
 
     return (
     <label className="floating-label">
         <span>
             {props.label}
         </span>
-        <input 
+        <select 
               {...field}
-              value={field.value ?? ''}
-              type={props.type}
-              min={minDate}
-              className={clsx('input w-full', 
+              value={field.value || `Select a ${props.label}`}              
+              className={clsx('select w-full', 
                 {'input-error': !!fieldState.error},  //!! first ! is a boolean check if it exists then a check if it is false
                 {'input-success': !fieldState.error && fieldState.isDirty }
             )}
-              placeholder={props.label} />
+              >
+              <option disabled>Select a {props.label}</option>
+              {props.options.map(option => (
+                  <option key={option.key} value={option.key}>
+                      {option.label}
+                  </option>
+              ))}
+        </select>
         {
             fieldState.error && 
             (<div className="mt-1 text-xs font-semibold block text-error">
