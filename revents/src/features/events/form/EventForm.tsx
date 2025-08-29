@@ -6,6 +6,8 @@ import { createEvent, updateEvent } from "../eventSlice";
 import { useAppSelector } from "../../../lib/stores/store";
 import { useForm, type FieldValues } from 'react-hook-form';
 import TextInput from "../../../app/shared/components/TextInput";
+import { eventFormSchema, type EventFormSchema } from "../../../lib/scehmas/EventFormSchema";
+import {zodResolver} from '@hookform/resolvers/zod';
 
 export default function EventForm() {
   const { dispatch } = useAppBase();
@@ -22,9 +24,10 @@ export default function EventForm() {
     city: '',
     venue: ''
   };
-
-  const { register, control, handleSubmit, formState: {isValid} } = useForm({
+  
+  const { register, control, handleSubmit, formState: {isValid} } = useForm<EventFormSchema>({
     mode: 'onTouched',
+    resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues
   });
 
@@ -67,14 +70,13 @@ export default function EventForm() {
             <TextInput 
               control={control}
               name="title"
-              label="Title"
-              rules={{ required: 'Title is required' }}
+              label="Title"              
+            />              
+            <TextInput
+              control={control}
+              name="category"
+              label="Category"
             />
-            <input
-              {...register("category")}
-              type="text"
-              className="input w-full"
-              placeholder="Category" />
 
             <textarea 
                 {...register("description")}
@@ -88,18 +90,18 @@ export default function EventForm() {
               className="input w-full"
               placeholder="Date" />
 
-            <input 
-              {...register("city")}
-              type="text"
-              className="input w-full"
-              placeholder="City" />
+            <TextInput
+              control={control}
+              name="city"
+              label="City"
+            />
 
-            <input 
-              {...register("venue")}
-              type="text"
-              className="input w-full"
-              placeholder="Venue" />
-            
+            <TextInput
+              control={control}
+              name="venue"
+              label="Venue"
+            />    
+                  
             <div className="flex justify-end w-full gap-3">
                 <button                   
                   type="button" 
@@ -119,3 +121,4 @@ export default function EventForm() {
     </div>
   )
 }
+
