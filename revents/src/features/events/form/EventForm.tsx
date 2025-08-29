@@ -4,6 +4,8 @@ import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import type { AppEvent } from "../../../lib/types";
 import { createEvent, updateEvent } from "../eventSlice";
 import { useAppSelector } from "../../../lib/stores/store";
+import { useForm, type FieldValues } from 'react-hook-form';
+import TextInput from "../../../app/shared/components/TextInput";
 
 export default function EventForm() {
   const { dispatch } = useAppBase();
@@ -16,14 +18,19 @@ export default function EventForm() {
     title: '',
     category: '',
     description: '',
-    date: '',
+    date: new Date().toISOString().slice(0,16),
     city: '',
     venue: ''
   };
+
+  const { register, control, handleSubmit, formState: {isValid} } = useForm({
+    mode: 'onTouched',
+    defaultValues: initialValues
+  });
+
   
-  const onSubmit = (formData: FormData) => {
-    const data = Object.fromEntries(formData.entries()) as unknown as AppEvent;
-            
+  const onSubmit = (data: FieldValues) => {
+                
     if(selectedEvent) {
       dispatch(updateEvent({...selectedEvent, ...data}));
       navigate(`/events/${selectedEvent.id}`);
@@ -31,7 +38,7 @@ export default function EventForm() {
     }
     
     const newEventId = crypto.randomUUID();
-    dispatch(createEvent({
+    const newEvent  = {
         ...data,
         id: newEventId,
         hostUid: users[0].uid,
@@ -43,8 +50,12 @@ export default function EventForm() {
         }],
         attendeeIds: [users[0].uid],
         latitude: 0,
-        longitude: 0
-    }));    
+        longitude: 0        
+    }
+
+    dispatch(createEvent({
+      ...newEvent as AppEvent
+    }));
     navigate(`/events/${newEventId}`);
   }
 
@@ -52,52 +63,56 @@ export default function EventForm() {
     <div className="card card-border bg-base-100 w-full shadow-xl">
       <div className="card-body">
         <h3 className="text-2xl font-semibold text-center text-primary">{selectedEvent ? 'Edit Event' : 'Create Event'}</h3>
-        <form action={onSubmit} className="flex flex-col gap-3 width-full">
-            <input 
-              defaultValue={initialValues.title} 
-              name="title" 
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 width-full">
+            <TextInput 
+              control={control}
+              name="title"
+              label="Title"
+              rules={{ required: 'Title is required' }}
+            />
+            <input
+              {...register("category")}
               type="text"
-               className="input w-full" 
-               placeholder="Event Title" />
-
-            <input 
-              defaultValue={initialValues.category} 
-              name="category" 
-              type="text"
-               className="input w-full"
-                placeholder="Category" />
+              className="input w-full"
+              placeholder="Category" />
 
             <textarea 
-                defaultValue={initialValues.description}
-                name="description"    
+                {...register("description")}
                 className="textarea w-full" 
                 placeholder="Description" 
                 rows={4}/>
 
-            <input
-                defaultValue={initialValues.date ? new Date(initialValues.date).toISOString().slice(0, 16) : ''}
-                name="date"
-                type="datetime-local"
-                className="input w-full"
-                placeholder="Date" />
+            <input 
+              {...register("date")}
+              type="datetime-local"
+              className="input w-full"
+              placeholder="Date" />
 
             <input 
-                defaultValue={initialValues.city} 
-                name="city" 
-                type="text" 
-                className="input w-full" 
-                placeholder="City" />
-                
-            <input 
-                defaultValue={initialValues.venue} 
-                name="venue" 
-                type="text" 
-                className="input w-full" 
-                placeholder="Venue" />
+              {...register("city")}
+              type="text"
+              className="input w-full"
+              placeholder="City" />
 
+            <input 
+              {...register("venue")}
+              type="text"
+              className="input w-full"
+              placeholder="Venue" />
+            
             <div className="flex justify-end w-full gap-3">
-                <button type="button" onClick={() => navigate(-1)} className="btn btn-neutral btn-sm">Cancel</button>
-                <button type="submit" className="btn btn-primary btn-sm">Submit</button>
+                <button                   
+                  type="button" 
+                  onClick={() => navigate(-1)} 
+                  className="btn btn-neutral btn-sm">
+                    Cancel
+                  </button>
+                <button 
+                  disabled= {!isValid}
+                  type="submit" 
+                  className="btn btn-primary btn-sm">
+                    Submit
+                  </button>
             </div>
         </form>
         </div>
