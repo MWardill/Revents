@@ -20,7 +20,7 @@ const venuSchema = z.object({
 export const eventFormSchema = z.object({
     title: requiredString('Title'),
     category: requiredString('Category'),
-    description: requiredString('Description'),
+    description: requiredString('Description').min(5, 'Description must have at least 5 characters'),
     date: requiredString('Date').refine((val) => {
         const selectedDate = new Date(val);
         return selectedDate > new Date();

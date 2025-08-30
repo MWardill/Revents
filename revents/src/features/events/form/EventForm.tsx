@@ -12,7 +12,6 @@ import TextArea from "../../../app/shared/components/TextArea";
 import { categoryOptions } from "./CategoryOptions";
 import SelectInput from "../../../app/shared/components/SelectInput";
 import PlaceInput from "../../../app/shared/components/PlaceInput";
-import { date } from "zod";
 
 export default function EventForm() {
   const { dispatch } = useAppBase();
@@ -30,7 +29,7 @@ export default function EventForm() {
     title: selectedEvent.title,
     category: selectedEvent.category,
     description: selectedEvent.description, 
-    date: selectedEvent.date,
+    date: new Date(selectedEvent.date).toISOString().slice(0,16),
     city: selectedEvent.city,
     venue: {
       venue: selectedEvent.venue,
@@ -63,7 +62,7 @@ export default function EventForm() {
       const updatedEvent: AppEvent = {
         ...selectedEvent, 
         ...data,
-        venue: data.venue.venue,
+        venue: data.venue.venue, //this is needed because data is not flat - we need to flatted it to move from the form data schema to the appEvent object definition
         latitude: data.venue.latitude,
         longitude: data.venue.longitude,
         city: data.city || selectedEvent.city

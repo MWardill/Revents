@@ -20,7 +20,7 @@ export default function EventDetailInfo({ appEvent }: Props) {
         </div>
         <div className="flex items-center gap-x-3  py-3 pl-3 bg-white rounded-b-lg">
           <MapPinIcon className="size-8" />
-          <span>{appEvent.city}</span>
+          <span>{appEvent.venue}</span>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-p1',
         title: "Past Activity 1",
-        date: new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString(),
+        date: new Date('2025-09-15').toISOString(),
         description: "Activity 2 months ago",
         category: "drinks",
         city: "London",
@@ -42,7 +42,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-p2',
         title: "Past Activity 2",
-        date: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
+        date: new Date('2025-10-20').toISOString(),
         description: "Activity 1 month ago",
         category: "culture",
         city: "Paris",
@@ -60,7 +60,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-f1',
         title: "Future Activity 1",
-        date: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
+        date: new Date('2025-11-25').toISOString(),
         description: "Activity 1 month in future",
         category: "culture",
         city: "London",
@@ -74,7 +74,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-f2',
         title: "Future Activity 2",
-        date: new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString(),
+        date: new Date('2025-12-10').toISOString(),
         description: "Activity 2 months in future",
         category: "music",
         city: "London",
@@ -91,7 +91,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-f3',
         title: "Future Activity 3",
-        date: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString(),
+        date: new Date('2025-12-30').toISOString(),
         description: "Activity 3 months in future",
         category: "drinks",
         city: "London",
@@ -105,7 +105,7 @@ export const events: AppEvent [] = [
     {
         id: 'activity-f4',
         title: "Future Activity 4",
-        date: new Date(new Date().setMonth(new Date().getMonth() + 4)).toISOString(),
+        date: new Date('2025-12-31').toISOString(),
         description: "Activity 4 months in future",
         category: "drinks",
         city: "London",
