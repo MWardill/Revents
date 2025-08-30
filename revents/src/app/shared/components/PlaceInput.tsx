@@ -1,7 +1,8 @@
 import clsx from 'clsx'
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useController, type FieldValues, type UseControllerProps } from 'react-hook-form';
 import type { Suggestion } from '../../../lib/types';
+import { debounce } from '../../../util/utils';
 
 type Props<T extends FieldValues> = {      
     type?: string;
@@ -16,7 +17,7 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
     
     const locationUrl = 'https://api.locationiq.com/v1/autocomplete?dedupe=1&limit=6&key=pk.db2d58db6b4d6b8075d30c71d1e9a101';
 
-    const fetchSuggestions = async (query: string) => {
+    const fetchSuggestions = useMemo(() => debounce(async (query: string) => {
         if(!query || query.length < 3) {
             setSuggestions([]);
             return;
@@ -33,7 +34,7 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
         } finally {
             setLoading(false);
         }
-    };
+    }, 1000), [locationUrl]);
 
     const handleChange = async (value: string) => {
         field.onChange(value);
