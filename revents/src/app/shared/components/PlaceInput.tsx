@@ -59,9 +59,10 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
 
         {loading && <div>loading...</div>} 
         {suggestions.length > 0 && (
-            <ul>
+            <ul className="list rounded-box p-1 shadow-md">
                 {suggestions.map((suggestion) => (
                     <li 
+                        className='list-row p-1 cursor-pointer hover:bg-base-300'
                         key={suggestion.place_id}
                         onClick={() => {
                             field.onChange(suggestion.display_name);
