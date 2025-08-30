@@ -4,7 +4,7 @@ import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import type { AppEvent } from "../../../lib/types";
 import { createEvent, updateEvent } from "../eventSlice";
 import { useAppSelector } from "../../../lib/stores/store";
-import { useForm, type FieldValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import TextInput from "../../../app/shared/components/TextInput";
 import { eventFormSchema, type EventFormSchema } from "../../../lib/scehmas/EventFormSchema";
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -12,6 +12,7 @@ import TextArea from "../../../app/shared/components/TextArea";
 import { categoryOptions } from "./CategoryOptions";
 import SelectInput from "../../../app/shared/components/SelectInput";
 import PlaceInput from "../../../app/shared/components/PlaceInput";
+import { date } from "zod";
 
 export default function EventForm() {
   const { dispatch } = useAppBase();
@@ -19,14 +20,34 @@ export default function EventForm() {
 
   const { id } = useParams<{id: string}>();  
   const selectedEvent = useAppSelector(state => state.event.events.find(e => e.id === id));
+
+  const now = new Date();
+  const lunchtimeTomorrow = new Date(now);
+  lunchtimeTomorrow.setDate(now.getDate() + 1);
+  lunchtimeTomorrow.setHours(12, 0, 0, 0);
   
-  const initialValues = selectedEvent ?? {
+  const initialValues: EventFormSchema = selectedEvent ? {
+    title: selectedEvent.title,
+    category: selectedEvent.category,
+    description: selectedEvent.description, 
+    date: selectedEvent.date,
+    city: selectedEvent.city,
+    venue: {
+      venue: selectedEvent.venue,
+      latitude: selectedEvent.latitude,
+      longitude: selectedEvent.longitude
+    }
+  } : {
     title: '',
     category: '',
     description: '',
-    date: new Date().toISOString().slice(0,16),
+    date: lunchtimeTomorrow.toISOString().slice(0,16),
     city: '',
-    venue: ''
+    venue: {
+      venue: '',
+      latitude: 0,
+      longitude: 0
+    }
   };
   
   const { control, handleSubmit, formState: {isValid} } = useForm<EventFormSchema>({
@@ -36,18 +57,32 @@ export default function EventForm() {
   });
 
   
-  const onSubmit = (data: FieldValues) => {
+  const onSubmit = (data: EventFormSchema) => {
                 
     if(selectedEvent) {
-      dispatch(updateEvent({...selectedEvent, ...data}));
+      const updatedEvent: AppEvent = {
+        ...selectedEvent, 
+        ...data,
+        venue: data.venue.venue,
+        latitude: data.venue.latitude,
+        longitude: data.venue.longitude,
+        city: data.city || selectedEvent.city
+      };
+      dispatch(updateEvent(updatedEvent));
       navigate(`/events/${selectedEvent.id}`);
       return;
     }
-    
+
+
+      
     const newEventId = crypto.randomUUID();
-    const newEvent  = {
+    const newEvent: AppEvent  = {
         ...data,
         id: newEventId,
+        venue: data.venue.venue,
+        latitude: data.venue.latitude,
+        longitude: data.venue.longitude,
+        city: data.city || '',
         hostUid: users[0].uid,
         attendees: [{
           id: users[0].uid,
@@ -55,16 +90,14 @@ export default function EventForm() {
           photoURL: users[0].photoURL,
           isHost: true
         }],
-        attendeeIds: [users[0].uid],
-        latitude: 0,
-        longitude: 0        
+        attendeeIds: [users[0].uid]       
     }
 
-    dispatch(createEvent({
-      ...newEvent as AppEvent
-    }));
+    dispatch(createEvent(newEvent));
     navigate(`/events/${newEventId}`);
   }
+
+
 
   return (
     <div className="card card-border bg-base-100 w-full shadow-xl">
@@ -95,7 +128,7 @@ export default function EventForm() {
               name="date"
               label="Date"
               type="datetime-local"
-              min={new Date()}
+              min={now}
             />
 
             <PlaceInput

@@ -17,7 +17,17 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
     const inputRef = useRef<HTMLInputElement>(null);
-    
+
+    const [inputValue, setInputValue] = useState(field.value || '');
+
+    useEffect(() => {
+        if(field.value && typeof field.value === 'object') {
+            setInputValue(field.value.venue || '');
+        } else {
+            setInputValue(field.value);
+        }        
+    }, [field.value]);
+
     const locationUrl = 'https://api.locationiq.com/v1/autocomplete?dedupe=1&limit=6&key=pk.db2d58db6b4d6b8075d30c71d1e9a101';
 
     const fetchSuggestions = useMemo(() => debounce(async (query: string) => {
@@ -68,11 +78,35 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
     }, [suggestions.length]);
 
     const handleChange = async (value: string) => {
-        field.onChange(value);
+        setInputValue(value);
+        // Always maintain object structure for validation
+        if (value.trim() === '') {
+            field.onChange({ venue: '', city: '', latitude: 0, longitude: 0 });
+        } else {
+            // If user is typing but hasn't selected a suggestion, preserve existing location data if any
+            const currentValue = field.value;
+            if (typeof currentValue === 'object' && currentValue) {
+                field.onChange({ ...currentValue, venue: value });
+            } else {
+                field.onChange({ venue: value, city: '', latitude: 0, longitude: 0 });
+            }
+        }
         await fetchSuggestions(value);
     }
 
+    const handleSelect = (location: Suggestion) => {
+        const venue = location.display_name;
+        const city = location.address?.city;
+        const latitude = parseFloat(location.lat);
+        const longitude = parseFloat(location.lon);
+                
+        field.onChange({ venue, city, latitude, longitude });
+        setSuggestions([]);
+    };
+
     const handleBlur = () => {
+        // Call the field's onBlur to mark it as touched
+        field.onBlur();
         // Small delay to allow click events on suggestions to fire first
         setTimeout(() => {
             setSuggestions([]);
@@ -85,11 +119,11 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
             {props.label}
         </span>
         <input               
-              {...field}
+              name={field.name}
               ref={inputRef}
               onChange={(e) => handleChange(e.target.value)}  
               onBlur={handleBlur}
-              value={field.value ?? ''}
+              value={inputValue}
               type={props.type}             
               className={clsx('input w-full', 
                 {'input-error': !!fieldState.error},  //!! first ! is a boolean check if it exists then a check if it is false
@@ -119,7 +153,7 @@ export default function PlaceInput<T extends FieldValues>(props: Props<T>) {
                         className='px-3 py-2 cursor-pointer hover:bg-base-200 border-b border-base-300 last:border-b-0'
                         key={suggestion.place_id}
                         onClick={() => {
-                            field.onChange(suggestion.display_name);
+                            handleSelect(suggestion);
                             setSuggestions([]);
                         }}
                     >{suggestion.display_name}</li>
