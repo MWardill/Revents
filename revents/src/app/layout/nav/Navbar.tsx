@@ -1,18 +1,10 @@
-import { NavLink, useNavigate } from "react-router";
-
+import { Link, NavLink, useNavigate } from "react-router";
 import { useAppBase } from "../../../lib/hooks/useBaseComponent";
 import UserMenu from "./UserMenu";
-import { signIn } from "../../../features/account/AccountSlice";
 
 export default function Navbar() {
-    const { user, dispatch } = useAppBase();
-    const navigate = useNavigate();
-
-    const handleSignIn = () => {
-        dispatch(signIn());
-        navigate("/events");
-    }
-
+    const { user } = useAppBase();
+    
     return (
         <header className="headernav p-2 w-full sticky top-0 z-50 bg-gradient-to-r from-primary to-info">
             <div className="flex align-middle items-center px-10 mx-auto gap-6">
@@ -26,7 +18,7 @@ export default function Navbar() {
                 <div className="flex align-middle ml-auto gap-3">
                     {user ? (<UserMenu />) : (
                         <>
-                            <button onClick={handleSignIn} className="btn btn-sm">Login</button>
+                            <Link to="/login" className="btn btn-sm">Login</Link>
                             <button className="btn btn-sm">Register</button>
                         </>
                     )}

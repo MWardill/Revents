@@ -5,6 +5,7 @@ import EventDetails from "../../features/events/details/EventDetails";
 import EventDashboard from "../../features/events/dashboard/EventDashboard";
 import EventForm from "../../features/events/form/EventForm";
 import ErrorBoundary from "../layout/ErrorBoundary";
+import LoginForm from "../../features/account/LoginForm";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "events/:id/manage",
         element: <EventForm />,
+      },
+      {
+        path: "login",
+        element: <LoginForm />
       }
     ]
   }

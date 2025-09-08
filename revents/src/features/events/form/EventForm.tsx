@@ -6,7 +6,7 @@ import { createEvent, updateEvent } from "../eventSlice";
 import { useAppSelector } from "../../../lib/stores/store";
 import { useForm } from 'react-hook-form';
 import TextInput from "../../../app/shared/components/TextInput";
-import { eventFormSchema, type EventFormSchema } from "../../../lib/scehmas/EventFormSchema";
+import { eventFormSchema, type EventFormSchema } from "../../../lib/schemas/EventFormSchema";
 import {zodResolver} from '@hookform/resolvers/zod';
 import TextArea from "../../../app/shared/components/TextArea";
 import { categoryOptions } from "./CategoryOptions";
