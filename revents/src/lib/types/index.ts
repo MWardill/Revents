@@ -1,3 +1,5 @@
+import type { Timestamp } from "firebase/firestore";
+
 export type AppUser = {
     uid: string;
     displayName: string;
@@ -25,6 +27,10 @@ export type AppEvent = {
     hostUid: string;
     attendees: Attendee[];
     attendeeIds: string[];
+}
+
+export type FirestoreAppEvent = Omit<AppEvent, 'date'> & {
+  date: Timestamp
 }
 
 export interface Suggestion {

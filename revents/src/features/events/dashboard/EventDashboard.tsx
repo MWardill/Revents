@@ -1,9 +1,21 @@
 import EventCard from "./EventCard";
 import Counter from "../../counter/Counter";
-import { useAppBase } from "../../../lib/hooks/useBaseComponent";
+import { useCollection } from "../../../lib/hooks/useCollection";
+import type { AppEvent } from "../../../lib/types";
+import LoadingSpinner from "../../../lib/components/LoadingSpinner";
 
 export default function EventDashboard() {
-  const { events: appEvents } = useAppBase();
+  const {data: appEvents, loading} = useCollection<AppEvent>({ path: 'events' });
+
+
+  if (loading) {
+    return (
+      <LoadingSpinner 
+        title="Loading Event Details" 
+        message="Please wait while we fetch the latest information..." 
+      />
+    );
+  }
 
   return (
     <div className="flex flex-row w-full gap-6">
@@ -17,7 +29,7 @@ export default function EventDashboard() {
             transition={{ ease: "easeInOut", duration: 0.5 }}
           > */}
             <div className="flex flex-col gap-4">
-              {appEvents.map((event) => (
+              {appEvents?.map((event) => (
                 <EventCard                 
                 key={event.id} 
                 event={event}                 
