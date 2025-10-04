@@ -10,7 +10,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBzufkMncBzjZfk7jzVugiNP8keXB1m0f0",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "revents-4309e.firebaseapp.com",
   projectId: "revents-4309e",
   storageBucket: "revents-4309e.firebasestorage.app",

@@ -27,3 +27,5 @@ ReactApp.code-workspace
 *.code-workspace
 
 src/lib/firebase/admin-creds.json
+
+.env.local
