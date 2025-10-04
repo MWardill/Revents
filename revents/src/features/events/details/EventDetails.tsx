@@ -3,41 +3,21 @@ import EventDetailHeader from "./EventDetailHeader";
 import EventDetailInfo from "./EventDetailInfo";
 import EventDetailSidebar from "./EventDetailSidebar";
 import EventNotFound from "./EventNotFound";
-import LoadingSpinner from "../../../lib/components/LoadingSpinner";
+import LoadingSpinner from "../../../app/shared/components/LoadingSpinner";
 import { useParams } from "react-router";
 import { AnimatePresence, motion } from "motion/react";
-import { useDocument } from "../../../lib/hooks/useDocument";
+import { useDelayedDocument } from "../../../lib/hooks/useDelayedDocument";
 import type { AppEvent } from "../../../lib/types";
-import { useEffect, useState, useCallback } from "react";
 
 export default function EventDetails() {  
   const { id } = useParams<{ id: string }>();
-  const [shouldFetch, setShouldFetch] = useState(false);
-  const [isDelaying, setIsDelaying] = useState(true);
   
-  
-  const delayedFetch = useCallback(() => {
-    setTimeout(() => {
-      setShouldFetch(true);
-      setIsDelaying(false);
-    }, 800);
-  }, []);
-
-  useEffect(() => {
-    if (id) {
-      setShouldFetch(false);
-      setIsDelaying(true);
-      delayedFetch();
-    }
-  }, [id, delayedFetch]);
-
-  const { data: selectedEvent, loading } = useDocument<AppEvent>({ 
+  const { data: selectedEvent, loading } = useDelayedDocument<AppEvent>({ 
     path: 'events', 
-    id: shouldFetch ? id : undefined 
-  });
+    id 
+  });  
 
-  
-  if (loading || isDelaying) {
+  if (loading) {
     return (
       <LoadingSpinner 
         title="Loading Event Details" 

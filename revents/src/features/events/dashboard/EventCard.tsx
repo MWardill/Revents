@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import type { AppEvent } from "../../../lib/types";
 import EventAttendees from "./EventAttendees";
+//import { useFirestoreActions } from "../../../lib/hooks/useFirestoreActions";
 
 type Props = {
     event: AppEvent;    
@@ -8,6 +9,7 @@ type Props = {
 
 export default function EventCard({ event }: Props) {
     const host = event.attendees.find(attendee => attendee.isHost);
+    //const { fsRemove } = useFirestoreActions({ path: 'events' });
 
     return (
         <div className="card card-border bg-base-100 w-full shadow-xl">
@@ -34,7 +36,8 @@ export default function EventCard({ event }: Props) {
                         {event.description}
                     </div>
                     <div className="flex gap-3">
-                        {/* <button onClick={() => actions.deleteEvent(event.id)} className="btn btn-sm btn-error">Delete</button> */}
+                        {/* <button                             
+                            onClick={async () => await fsRemove(event.id)} className="btn btn-sm btn-error">Delete</button>                         */}
                         <Link to={`/events/${event.id}`} className="btn btn-sm btn-primary">View</Link>                        
                     </div>
                 </div>

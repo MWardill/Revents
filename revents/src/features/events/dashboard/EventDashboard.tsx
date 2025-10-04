@@ -1,11 +1,11 @@
 import EventCard from "./EventCard";
 import Counter from "../../counter/Counter";
-import { useCollection } from "../../../lib/hooks/useCollection";
+import { useDelayedCollection } from "../../../lib/hooks/useDelayedCollection";
 import type { AppEvent } from "../../../lib/types";
-import LoadingSpinner from "../../../lib/components/LoadingSpinner";
+import LoadingSpinner from "../../../app/shared/components/LoadingSpinner";
 
 export default function EventDashboard() {
-  const {data: appEvents, loading} = useCollection<AppEvent>({ path: 'events' });
+  const {data: appEvents, loading} = useDelayedCollection<AppEvent>({ path: 'events' });
 
 
   if (loading) {

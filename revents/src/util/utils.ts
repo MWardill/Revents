@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 export function debounce<T extends unknown[], U>(
   callback: (...args: T) => PromiseLike<U> | U,
@@ -31,3 +32,16 @@ export const convertTimestamps = (data: unknown): unknown => {
 
   return data;
 };
+
+export function handleError(error: unknown, userMessage = "An unexpected error occurred") {
+  if (error instanceof Error) {
+    toast.error(error.message);
+  } else if (typeof error === "string") {
+    toast.error(error);
+  } else {
+    toast.error(userMessage)
+  }
+  // Always log the error for debugging
+  console.error(userMessage); 
+  console.error(error);            
+}
