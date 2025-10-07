@@ -8,7 +8,7 @@ type Options = {
 
 export const useFirestoreActions = <T extends DocumentData>({ path }: Options) => {
     const [fsSubmitting, setSubmitting] = useState(false);
-
+    
     const fsCreate = async (data: T) => {
         setSubmitting(true);
         try {
@@ -16,6 +16,19 @@ export const useFirestoreActions = <T extends DocumentData>({ path }: Options) =
             const ref = doc(collection(db, path));
             await setDoc(ref,data);
             return ref;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        } finally {
+           setSubmitting(false); 
+        }
+    }
+        
+    const fsSetDocument = async (id: string, data: T) => {
+        setSubmitting(true);
+        try {
+            // Implement create logic here  
+            await setDoc(doc(db, path, id), data);                        
         } catch (error) {
             console.error(error);
             throw error;
@@ -56,5 +69,5 @@ export const useFirestoreActions = <T extends DocumentData>({ path }: Options) =
     }
     
 
-    return {fsCreate, fsUpdate, fsRemove, fsSubmitting};
+    return {fsCreate, fsUpdate, fsRemove, fsSubmitting, fsSetDocument};
 }

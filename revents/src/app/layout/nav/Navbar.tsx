@@ -19,7 +19,7 @@ export default function Navbar() {
                     {user ? (<UserMenu />) : (
                         <>
                             <Link to="/login" className="btn btn-sm">Login</Link>
-                            <button className="btn btn-sm">Register</button>
+                            <Link to="/register" className="btn btn-sm">Register</Link>                        
                         </>
                     )}
                 </div>
