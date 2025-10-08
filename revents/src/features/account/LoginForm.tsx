@@ -8,6 +8,7 @@ import { handleError } from "../../util/utils";
 import { auth } from "../../lib/firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import CenteredCard from "../../app/shared/components/CenteredCard";
+import SocialLogin from "./SocialLogin";
 
 export default function LoginForm() {
     const navigate = useNavigate();
@@ -38,8 +39,10 @@ export default function LoginForm() {
                 <button type="submit" className="btn btn-primary w-full" disabled={!isValid || isSubmitting}>
                     {isSubmitting && <span className="loading loading-spinner"></span>}
                     Sign In
-                </button>
+                </button>                
             </form>
+            <div className="divider">OR</div>                
+            <SocialLogin /> 
         </CenteredCard>
     )
 }

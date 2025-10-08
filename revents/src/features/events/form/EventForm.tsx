@@ -14,12 +14,12 @@ import { useFirestoreActions } from "../../../lib/hooks/useFirestoreActions";
 import { Timestamp } from "firebase/firestore";
 import LoadingSpinner from "../../../app/shared/components/LoadingSpinner";
 import { handleError } from "../../../util/utils";
-import { users } from "../../../lib/data/sampleData";
-import type { Firestore } from "firebase-admin/firestore";
+import { useAppSelector } from "../../../lib/stores/store";
 
 export default function EventForm() {
 
   const [isSubmitting, setSubmitting] = useState(false);
+  const currentUser = useAppSelector(state => state.account.user);
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -121,19 +121,19 @@ export default function EventForm() {
       const newEvent = {
         ...data,     
         ...processForm(data),   
-        id: '', // Temporary id, Firestore will assign a real one
+        // Don't include id field - Firestore will auto-generate one
         venue: data.venue.venue,
         latitude: data.venue.latitude,
         longitude: data.venue.longitude,
         city: data.city || '',
-        hostUid: users[0].uid,
+        hostUid: currentUser?.uid || '',
         attendees: [{
-          id: users[0].uid,
-          displayName: users[0].displayName,
-          photoURL: users[0].photoURL,
+          id: currentUser?.uid || '',
+          displayName: currentUser?.displayName || 'Anonymous',
+          photoURL: currentUser?.photoURL || '',
           isHost: true
         }],
-        attendeeIds: [users[0].uid]
+        attendeeIds: [currentUser?.uid || '']
       }
 
       const ref = await fsCreate(newEvent as FirestoreAppEvent);
