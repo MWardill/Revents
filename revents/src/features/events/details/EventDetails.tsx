@@ -12,12 +12,13 @@ import type { AppEvent } from "../../../lib/types";
 export default function EventDetails() {  
   const { id } = useParams<{ id: string }>();
   
-  const { data: selectedEvent, loading } = useDelayedDocument<AppEvent>({ 
+  const { data: selectedEvent, loading, isDelaying } = useDelayedDocument<AppEvent>({ 
     path: 'events', 
     id 
   });  
 
-  if (loading) {
+  // Show loading if we're loading, delaying, or if we don't have data yet
+  if (loading || isDelaying || (!selectedEvent && id)) {
     return (
       <LoadingSpinner 
         title="Loading Event Details" 

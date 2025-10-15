@@ -7,6 +7,7 @@ import EventForm from "../../features/events/form/EventForm";
 import ErrorBoundary from "../layout/ErrorBoundary";
 import LoginForm from "../../features/account/LoginForm";
 import RegisterForm from "../../features/account/RegisterForm";
+import ProfilePage from "../../features/profile/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <RegisterForm />
+      },
+      {
+        path: "profile/:id", 
+        element: <ProfilePage />
       }
     ]
   }

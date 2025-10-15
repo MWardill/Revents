@@ -8,6 +8,17 @@ export type AppUser = {
     providerId: string;
 }
 
+export type Profile = { 
+    id: string;
+    displayName: string;
+    email: string;
+    photoURL?: string;
+    createdAt: string;
+    followersCount: number;
+    followingCount: number;
+}
+
+
 export type Attendee = {
     id: string;
     displayName: string;
