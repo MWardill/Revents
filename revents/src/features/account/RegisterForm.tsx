@@ -9,7 +9,6 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import CenteredCard from "../../app/shared/components/CenteredCard";
 import { registerSchema, type RegisterSchema } from "../../lib/schemas/registerSchema";
 import { useFirestoreActions } from "../../lib/hooks/useFirestoreActions";
-import { createDraftSafeSelector } from "@reduxjs/toolkit";
 import { Timestamp } from "firebase/firestore";
 
 export default function RegisterForm() {
@@ -24,7 +23,14 @@ export default function RegisterForm() {
         try {
             //This is updated by the authprovider which wraps the app
             const result = await createUserWithEmailAndPassword(auth, data.email, data.password);
-            await updateProfile(result.user, { displayName: data.displayName });
+            
+            // Update the user profile with displayName
+            try {
+                await updateProfile(result.user, { displayName: data.displayName });
+            } catch (profileError) {
+                console.warn('Failed to update user profile:', profileError);
+                // Continue with registration even if profile update fails
+            }
 
             await fsSetDocument(result.user.uid, {
                 email: data.email,

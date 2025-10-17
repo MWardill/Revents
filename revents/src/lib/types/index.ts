@@ -10,7 +10,7 @@ export type AppUser = {
 
 export type Profile = { 
     id: string;
-    displayName: string;
+    displayName: string | null;
     email: string;
     photoURL?: string;
     createdAt: string;
@@ -39,6 +39,7 @@ export type AppEvent = {
     hostUid: string;
     attendees: Attendee[];
     attendeeIds: string[];
+    isCancelled: boolean;
 }
 
 export type FirestoreAppEvent = Omit<AppEvent, 'date'> & {

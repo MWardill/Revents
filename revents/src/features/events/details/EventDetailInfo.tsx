@@ -3,6 +3,7 @@ import type { AppEvent } from "../../../lib/types";
 import { useState } from "react";
 import { map } from "zod";
 import MapComponent from "../../../app/shared/components/MapComponent";
+import { formatDateTime } from "../../../util/utils";
 
 type Props = {
   appEvent: AppEvent;
@@ -21,7 +22,7 @@ export default function EventDetailInfo({ appEvent }: Props) {
         </div>
         <div className="flex items-center gap-x-3 border-b border-neutral-300 py-3 pl-3 bg-white">
           <CalendarIcon className="size-8" />
-          <span>{appEvent.date}</span>
+          <span>{formatDateTime(appEvent.date)}</span>
         </div>
 
 

@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { AppUser } from "../../lib/types";
 import type { User } from "@firebase/auth";
+import { getDisplayName } from "../../util/utils";
 
 type State = {
     user: AppUser | null;
@@ -24,7 +25,7 @@ export const accountSlice = createSlice({
                     payload: {
                         uid: user.uid,
                         email: user.email,
-                        displayName: user.displayName,
+                        displayName: getDisplayName(user.displayName, user.email),
                         photoURL: user.photoURL,
                         providerId: user.providerData[0]?.providerId
                     } as AppUser

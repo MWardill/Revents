@@ -4,20 +4,13 @@ import { auth } from "../../lib/firebase/firebase";
 import { Timestamp } from "firebase/firestore";
 import { useFirestoreActions } from "../../lib/hooks/useFirestoreActions";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 
 export default function SocialLogin() {
     const { fsSetDocument } = useFirestoreActions({ path: 'profiles' });
     const navigate = useNavigate();
 
-    const [status, setStatus] = useState({
-        loading: false,
-        provider: ''
-    });
-
     const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const providerId = event.currentTarget.id;
-        setStatus({ loading: true, provider: providerId });
 
         let provider: AuthProvider;
         switch (providerId) {
@@ -28,7 +21,6 @@ export default function SocialLogin() {
                 provider = new GithubAuthProvider();
                 break;
             default:
-                setStatus({ loading: false, provider: '' });
                 return;
         }
 

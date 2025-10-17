@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { type FirestoreAppEvent, type AppEvent } from "../../../lib/types";
+import { type FirestoreAppEvent, type AppEvent, type AppUser } from "../../../lib/types";
 import { useForm } from 'react-hook-form';
 import TextInput from "../../../app/shared/components/TextInput";
 import { eventFormSchema, type EventFormSchema } from "../../../lib/schemas/EventFormSchema";
@@ -102,7 +102,8 @@ export default function EventForm() {
   // Utility function to add a minimum delay
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const dofsUpdate = async (data: EventFormSchema, selectedEvent: AppEvent | undefined) => {
+  const dofsUpdate = async (data: EventFormSchema, selectedEvent: AppEvent | undefined, currentUser: AppUser) => {
+    
     try {
       if (selectedEvent) {
         const updatedEvent: FirestoreAppEvent = {
@@ -126,14 +127,14 @@ export default function EventForm() {
         latitude: data.venue.latitude,
         longitude: data.venue.longitude,
         city: data.city || '',
-        hostUid: currentUser?.uid || '',
+        hostUid: currentUser.uid,
         attendees: [{
-          id: currentUser?.uid || '',
-          displayName: currentUser?.displayName || 'Anonymous',
-          photoURL: currentUser?.photoURL || '',
+          id: currentUser.uid,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
           isHost: true
         }],
-        attendeeIds: [currentUser?.uid || '']
+        attendeeIds: [currentUser.uid]
       }
 
       const ref = await fsCreate(newEvent as FirestoreAppEvent);
@@ -150,10 +151,14 @@ export default function EventForm() {
 
 
   const onSubmit = async (data: EventFormSchema) => {
+    if (!currentUser) {     
+      return;
+    }
+
     setSubmitting(true);
     const startTime = Date.now();
     const minimumDelay = 1200; // Increased to 1.2 seconds for better UX
-    const eventId = await dofsUpdate(data, selectedEvent);
+    const eventId = await dofsUpdate(data, selectedEvent, currentUser);
 
     // Ensure minimum delay has passed
     const elapsed = Date.now() - startTime;

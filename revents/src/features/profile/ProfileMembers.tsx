@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router"
 import { useDelayedCollection } from "../../lib/hooks/useDelayedCollection"
 import type { Profile } from "../../lib/types"
+import { formatDateTime } from "../../util/utils";
 
 export default function ProfileMembers() {
     const { data: members } = useDelayedCollection<Profile>({ path: 'profiles' })
@@ -36,7 +37,7 @@ export default function ProfileMembers() {
                                     </div>
                                 </div>
                             </td>
-                            <td>{member.createdAt}</td>
+                            <td>{formatDateTime(member.createdAt)}</td>
                             <td>
                                 <div className="flex gap-2">
                                     <button className="btn btn-xs">Follow</button>                                    

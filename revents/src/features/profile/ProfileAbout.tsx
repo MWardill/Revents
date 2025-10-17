@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useFirestoreActions } from "../../lib/hooks/useFirestoreActions";
-import { handleError } from "../../util/utils";
+import { formatDateTime, handleError } from "../../util/utils";
 import { auth } from "../../lib/firebase/firebase";
 import { updateProfile } from "@firebase/auth";
 import { toast } from "react-toastify";
@@ -45,7 +45,7 @@ export default function ProfileAbout({ profile, editMode, setEditMode }: Props) 
             {!editMode ? (<div className="flex flex-col gap-3">
                 <div className="flex gap-3">
                     <span className="font-semibold">Joined:</span>
-                    <span>{profile.createdAt}</span>
+                    <span>{formatDateTime(profile.createdAt)}</span>
                 </div>
                 <div>
                     {profile.description || 'No description provided yet'}

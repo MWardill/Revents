@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 export function debounce<T extends unknown[], U>(
   callback: (...args: T) => PromiseLike<U> | U,
@@ -44,4 +45,14 @@ export function handleError(error: unknown, userMessage = "An unexpected error o
   // Always log the error for debugging
   console.error(userMessage); 
   console.error(error);            
+}
+
+export function getDisplayName(displayName: string | null, email?: string | null): string {
+  if (displayName) return displayName;
+  if (email) return email.split('@')[0];
+  return 'Anonymous User';
+}
+
+export const formatDateTime = (date: string) => {
+  return format(new Date(date), 'dd MMM yyyy h:mm a');
 }
