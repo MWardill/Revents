@@ -6,8 +6,17 @@
   .headernav button {
     @apply cursor-pointer;
   }
-    
+ 
+  .bg-grad-primary {
+    @apply justify-center bg-gradient-to-r from-primary to-info text-white p-1 rounded-t-lg;
+  }
 }
+
+.react-calendar {
+  width: 100% !important;
+  border: none !important;
+  padding: 10px !important;
+} 
 
 a.active {
   @apply text-cyan-400;

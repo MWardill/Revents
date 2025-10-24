@@ -1,4 +1,4 @@
-import type { Timestamp } from "firebase/firestore";
+import type { Timestamp, WhereFilterOp, OrderByDirection } from "firebase/firestore";
 
 export type AppUser = {
     uid: string;
@@ -72,4 +72,21 @@ export interface Address {
   postcode?: string
   road?: string
   suburb?: string
+}
+
+export type CollectionOptions = {
+  queries?: QueryOption[];
+  sort?: SortOption;
+}
+
+export type QueryOption = {
+  attribute: string;
+  operator: WhereFilterOp;
+  value: string | number | boolean | Date | Timestamp;
+  isDate?: boolean;
+}
+
+export type SortOption = {
+  attribute: string;
+  direction: OrderByDirection
 }
