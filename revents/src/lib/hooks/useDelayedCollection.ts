@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCollection } from "./useCollection";
 import { useAppSelector } from "../stores/store";
 import type { DocumentData } from "firebase/firestore";
@@ -32,9 +32,14 @@ export const useDelayedCollection = <T extends DocumentData>({
     state.firestore.collections[path] as T[] | undefined
   );
 
+  // Memoize whether we have existing data to prevent unnecessary effect triggers
+  const hasExistingData = useMemo(() => {
+    return existingCollection && existingCollection.length > 0;
+  }, [existingCollection?.length]); // Only depend on length, not the array reference
+
   const delayedFetch = useCallback(() => {
     // If collection already exists in store, fetch immediately without delay
-    if (existingCollection && existingCollection.length > 0) {
+    if (hasExistingData) {
       setShouldFetch(true);
       setIsDelaying(false);
       return;
@@ -50,7 +55,7 @@ export const useDelayedCollection = <T extends DocumentData>({
     }, delay);
 
     return () => clearTimeout(timeoutId);
-  }, [delay, existingCollection]);
+  }, [delay, hasExistingData]);
 
   useEffect(() => {
     const cleanup = delayedFetch();
@@ -63,8 +68,7 @@ export const useDelayedCollection = <T extends DocumentData>({
     listen: shouldFetch && listen
   });
 
-  // If we have existing data and we're not actively loading new data, don't show loading
-  const hasExistingData = existingCollection && existingCollection.length > 0;
+  // Calculate loading state
   const showLoading = hasExistingData ? false : (loading || isDelaying);
 
   return {

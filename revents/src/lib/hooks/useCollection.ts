@@ -1,7 +1,7 @@
 import { onSnapshot, type DocumentData } from "firebase/firestore";
 import { useAppBase } from "./useBaseComponent";
 import { useAppSelector } from "../stores/store";
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { setCollections, setError, setLoading } from "../firebase/firestoreSlice";
 import { toast } from "react-toastify";
 import { convertTimestamps } from "../../util/utils";
@@ -17,6 +17,11 @@ export const useCollection = <T extends DocumentData>({ path, listen = true }: O
     const collectionData = useAppSelector(state => state.firestore.collections[path] as T[] | undefined);
     const loading = useAppSelector(state => state.firestore.loading);
     const options = useAppSelector(state => state.firestore.options[path]);
+
+    // Serialize options for stable dependency checking
+    const optionsKey = useMemo(() => {
+        return JSON.stringify(options || {});
+    }, [options]);
 
     const subscribeToCollection = useCallback(() => {
         if (!listen) return () => { }; //no-op if not listening
@@ -50,7 +55,7 @@ export const useCollection = <T extends DocumentData>({ path, listen = true }: O
             console.log(`🔌 Unsubscribing from collection '${path}'`);
             unsubscribe(); //unsubscribe from listener when component unmounts
         }
-    }, [dispatch, listen, path, options]);
+    }, [dispatch, listen, path, optionsKey]);
 
     useSyncExternalStore(subscribeToCollection, () => collectionData);
 

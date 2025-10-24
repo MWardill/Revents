@@ -90,3 +90,9 @@ export type SortOption = {
   attribute: string;
   direction: OrderByDirection
 }
+
+export type FilterItems = {
+  key: string;
+  text: string;
+  icon: React.ElementType;
+}
